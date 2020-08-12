@@ -12,7 +12,7 @@ class InitialError(IState):
         pass
 
 
-class InitialCapchaEntering(IState):
+class InitialCaptchaEntering(IState):
     def __init__(self, requester):
         self.requester = requester
 
@@ -32,9 +32,9 @@ class InitialState(IState):
         response = self.requester.get_current_month()
         if not response:
             self.error = response.error
-        # check capcha presence??
+        # check captcha presence??
 
     def next(self):
         if self.error:
             return InitialError(self.requester)
-        return InitialCapchaEntering(self.requester)
+        return InitialCaptchaEntering(self.requester)
