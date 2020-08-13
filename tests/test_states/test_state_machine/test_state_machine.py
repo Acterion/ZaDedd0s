@@ -1,4 +1,4 @@
-import src.states.state_mashine as sm
+import src.states.state_machine as sm
 import tests.test_states.test_state_machine.utility as uti
 
 

@@ -1,4 +1,4 @@
-from src.states.event_loop import Loop
+from src.event_loop.event_loop import Loop
 
 
 class StateMachine:
