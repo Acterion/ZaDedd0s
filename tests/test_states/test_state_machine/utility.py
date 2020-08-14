@@ -1,5 +1,6 @@
 import asyncio
 from src.states.istate import IState
+from tests.test_states.utility import FFinalState
 
 
 class FInitialState(IState):
@@ -13,19 +14,6 @@ class FInitialState(IState):
 
     def next(self):
         return self.next_state
-
-
-class FFinalState(IState):
-    def __init__(self):
-        self.run_was_called = False
-
-    async def run(self):
-        self.run_was_called = True
-
-    def get_run_was_called(self):
-        return self.run_was_called
-
-    def next(self): pass
 
 
 def make_initial_and_final_fake_states():
