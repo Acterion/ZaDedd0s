@@ -1,40 +1,28 @@
 from src.states.istate import IState
 
 
-class InitialError(IState):
-    def __init__(self, requester):
-        self.requester = requester
+class Ddosing(IState):
+    def __init__(self, state_actions):
+        self._state_actions = state_actions
 
     def run(self):
-        pass    
-    
+        pass
+
     def next(self):
         pass
 
 
-class InitialCaptchaEntering(IState):
-    def __init__(self, requester):
-        self.requester = requester
+class Initial(IState):
+    def __init__(self, state_actions, next_state, error_state):
+        self._state_actions = state_actions
+        self._next_state = next_state
+        self._error_state = error_state
 
-    def run(self):
-        pass
-    
-    def next(self):
-        pass
-
-
-class InitialState(IState):
-    def __init__(self, requester):
-        self.requester = requester
-        self.error = ''
-
-    def run(self):
-        response = self.requester.get_current_month()
-        if not response:
-            self.error = response.error
-        # check captcha presence??
+    async def run(self):
+        try:
+            await self._state_actions.get_current_month_and_solve_captcha()
+        except RuntimeError:
+            self._next_state = self._error_state
 
     def next(self):
-        if self.error:
-            return InitialError(self.requester)
-        return InitialCaptchaEntering(self.requester)
+        return self._next_state
