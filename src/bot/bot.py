@@ -1,5 +1,6 @@
 import logging
 
+from telegram import Bot
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -8,32 +9,36 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-def start(update, context):
-    """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi!')
+class DDBot:
+    def __init__(self, token):
+        self._token = token
+        self._bot = Bot(token)
+        self._updater = Updater(token, use_context=True)
+        self._dp = self._updater.dispatcher
+        self.add_handlers()
 
+    def add_handlers(self):
+        """Start the bot."""
+        self._dp.add_handler(CommandHandler("start", self.start))
+        self._dp.add_handler(CommandHandler("help", self.help_command))
+        self._dp.add_handler(MessageHandler(Filters.text & ~Filters.command, self.echo))
 
-def help_command(update, context):
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    def start_bot(self):
+        self._updater.start_polling()
+        self._updater.idle()
 
+    def start(self, update, context):
+        """Send a message when the command /start is issued."""
+        update.message.reply_text('Hi!')
 
-def echo(update, context):
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    def help_command(self, update, context):
+        """Send a message when the command /help is issued."""
+        update.message.reply_text('Help!')
 
+    def echo(self, update, context):
+        """Echo the user message."""
+        self.broadcast_message(update.message.text)
+        update.message.reply_text(update.message.text)
 
-def start_bot(token):
-    """Start the bot."""
-
-    updater = Updater(token, use_context=True)
-
-    dp = updater.dispatcher
-
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help_command))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
-
-    updater.start_polling()
-
-    updater.idle()
+    def broadcast_message(self, message):
+        self._bot.send_message("@deddoser", message)
