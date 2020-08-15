@@ -26,7 +26,8 @@ def echo(update, context):
 
 def start_bot():
     """Start the bot."""
-    updater = Updater(os.environ['bot_token'], use_context=True)
+    f = open(os.environ['bot_token'], "r")
+    updater = Updater(f.read(), use_context=True)
 
     dp = updater.dispatcher
 
