@@ -3,6 +3,8 @@ import os
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
+import utils.file_utils as file_uti
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
@@ -26,8 +28,8 @@ def echo(update, context):
 
 def start_bot():
     """Start the bot."""
-    f = open(os.environ['bot_token'], "r")
-    updater = Updater(f.read(), use_context=True)
+
+    updater = Updater(file_uti.readFile(os.environ['bot_token']), use_context=True)
 
     dp = updater.dispatcher
 
@@ -38,6 +40,7 @@ def start_bot():
     updater.start_polling()
 
     updater.idle()
+
 
 def main():
     start_bot()
