@@ -7,5 +7,9 @@ class IStateActions(abc.ABC):
         pass
 
     @abc.abstractmethod
-    async def detect_free_places(self):
+    async def check_free_places_in_current_month(self) -> bool:
+        pass
+
+    @abc.abstractmethod
+    async def check_free_places_in_next_month(self) -> bool:
         pass
