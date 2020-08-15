@@ -1,5 +1,4 @@
 import logging
-import os
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
@@ -24,9 +23,10 @@ def echo(update, context):
     update.message.reply_text(update.message.text)
 
 
-def start_bot():
+def start_bot(token):
     """Start the bot."""
-    updater = Updater(os.environ['bot_token'], use_context=True)
+
+    updater = Updater(token, use_context=True)
 
     dp = updater.dispatcher
 
@@ -37,10 +37,3 @@ def start_bot():
     updater.start_polling()
 
     updater.idle()
-
-def main():
-    start_bot()
-
-
-if __name__ == '__main__':
-    main()
