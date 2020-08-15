@@ -3,20 +3,28 @@ from src.states.istate import AErrorState
 
 
 class FakeStateActions(IStateActions):
-    def __init__(self, network_error=False):
-        self._get_current_month_and_solve_captcha_was_called_once = False
+    def __init__(self, network_error=False, free_places_in_current_month=False, free_places_in_next_month=False):
+        self.get_current_month_and_solve_captcha_was_called_once = False
+        self.check_free_places_in_current_month_was_called_once = False
+        self.check_free_places_in_next_month_was_called_once = False
+
         self._network_error = network_error
+        self._free_places_in_current_month = free_places_in_current_month
+        self._free_places_in_next_month = free_places_in_next_month
 
     async def get_current_month_and_solve_captcha(self):
         if self._network_error:
             raise RuntimeError()
 
-        self._get_current_month_and_solve_captcha_was_called_once = True
+        self.get_current_month_and_solve_captcha_was_called_once = True
 
-    async def detect_free_places(self): pass
+    async def check_free_places_in_current_month(self) -> bool:
+        self.check_free_places_in_current_month_was_called_once = True
+        return self._free_places_in_current_month
 
-    def assert_get_current_month_and_solve_captcha_was_called_once(self):
-        assert self._get_current_month_and_solve_captcha_was_called_once
+    async def check_free_places_in_next_month(self) -> bool:
+        self.check_free_places_in_next_month_was_called_once = True
+        return self._free_places_in_next_month
 
 
 class FakeError(AErrorState):

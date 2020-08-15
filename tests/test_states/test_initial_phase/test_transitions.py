@@ -1,4 +1,5 @@
-from src.states.initial_state import Initial
+from src.states.initial import Initial
+from src.states.ddosing import Ddosing
 from src.states.state_machine import StateMachine
 from tests.test_states.test_initial_phase.utility import FakeStateActions, FakeError
 
@@ -12,7 +13,7 @@ def test_initial_to_ddosing():
 
     fsm.exec()
 
-    actions.assert_get_current_month_and_solve_captcha_was_called_once()
+    assert actions.get_current_month_and_solve_captcha_was_called_once
     ddosing_sate.assert_run_was_called()
 
 
@@ -23,3 +24,25 @@ def test_initial_to_error():
     fsm.exec()
 
     error_sate.assert_finalize_was_called()
+
+
+def test_ddosing_to_penetration_through_current_month():
+    actions = FakeStateActions(free_places_in_current_month=True)
+    penetration = uti.FFinalState()
+    fsm = StateMachine(Ddosing(actions, penetration, None))
+
+    fsm.exec()
+
+    assert actions.check_free_places_in_current_month_was_called_once
+    penetration.assert_run_was_called()
+
+
+def test_ddosing_to_penetration_through_next_month():
+    actions = FakeStateActions(free_places_in_next_month=True)
+    penetration = uti.FFinalState()
+    fsm = StateMachine(Ddosing(actions, penetration, None))
+
+    fsm.exec()
+
+    assert actions.check_free_places_in_next_month_was_called_once
+    penetration.assert_run_was_called()
