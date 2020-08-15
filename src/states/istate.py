@@ -1,7 +1,7 @@
 import abc
 
 
-class IState(ABC):
+class IState(abc.ABC):
     @abc.abstractmethod
     def run(self):
         pass
