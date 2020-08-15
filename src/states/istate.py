@@ -1,8 +1,7 @@
 import abc
-from abc import ABC
 
 
-class IState(ABC):
+class IState(abc.ABC):
     @abc.abstractmethod
     def run(self):
         pass
@@ -12,7 +11,7 @@ class IState(ABC):
         pass
 
 
-class AState(IState, ABC):
+class AState(IState, abc.ABC):
     def __init__(self, state_actions, next_state, error_state):
         self._state_actions = state_actions
         self._next_state = next_state
