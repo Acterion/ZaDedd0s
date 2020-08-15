@@ -9,6 +9,7 @@ RUN cd /tmp && pipenv lock --requirements > requirements.txt
 RUN pip install -r /tmp/requirements.txt
 RUN pip uninstall --yes pipenv
 
-COPY src/ .
+COPY src src
+COPY main.py .
 
-CMD ["python", "./main.py"]
+CMD ["python", "main.py"]
