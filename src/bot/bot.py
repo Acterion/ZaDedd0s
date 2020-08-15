@@ -11,19 +11,19 @@ logger = logging.getLogger(__name__)
 
 class DDBot:
     def __init__(self, token):
-        self._token = token
         self._bot = Bot(token)
         self._updater = Updater(token, use_context=True)
         self._dp = self._updater.dispatcher
         self.add_handlers()
 
     def add_handlers(self):
-        """Start the bot."""
+        """Add commands and message handlers."""
         self._dp.add_handler(CommandHandler("start", self.start))
         self._dp.add_handler(CommandHandler("help", self.help_command))
         self._dp.add_handler(MessageHandler(Filters.text & ~Filters.command, self.echo))
 
     def start_bot(self):
+        """Start the bot."""
         self._updater.start_polling()
         self._updater.idle()
 
@@ -41,5 +41,5 @@ class DDBot:
         update.message.reply_text(update.message.text)
 
     def broadcast_message(self, message):
-        """Broadcast message into public channel"""
+        """Broadcast message into public channel."""
         self._bot.send_message("@deddoser", message)
