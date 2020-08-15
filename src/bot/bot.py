@@ -41,4 +41,5 @@ class DDBot:
         update.message.reply_text(update.message.text)
 
     def broadcast_message(self, message):
+        """Broadcast message into public channel"""
         self._bot.send_message("@deddoser", message)
