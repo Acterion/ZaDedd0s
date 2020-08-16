@@ -45,7 +45,7 @@ class Menu:
 
     def list_subs(self, update, context):
         """Send list of current subs."""
-        all_subs = ", ".join("{0}".format(n) for n in self._subs)
+        all_subs = ", ".join(f"{n}" for n in self._subs)
         reply = "No subs" if not all_subs else all_subs
         update.message.reply_text(reply)
 
