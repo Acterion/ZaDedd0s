@@ -1,9 +1,12 @@
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 
+import re
+
 only_captcha_tags = SoupStrainer("captcha")
 only_a_tags = SoupStrainer("a")
 only_input_tags = SoupStrainer("input")
+only_p_tags = SoupStrainer("p")
 
 
 class HtmlExtractor:
@@ -29,3 +32,7 @@ class HtmlExtractor:
         for el in hidden_inputs:
             result[el.get('name')] = el.get('value')
         return result
+
+    def check_success(self, html):
+        soup = BeautifulSoup(html, 'html.parser', parse_only=only_p_tags)
+        return False if soup.find(text=re.compile('ошибка')) else True

@@ -7,10 +7,10 @@ verify_ssl = true
 
 [packages]
 python-telegram-bot = "*"
-
 beautifulsoup4 = "*"
 pytest-mock = "*"
 pytest = "*"
+aiohttp = "*"
 
 [requires]
 python_version = "3.8"
