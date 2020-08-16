@@ -34,4 +34,4 @@ class HtmlExtractor:
 
     def check_success(self, html):
         soup = BeautifulSoup(html, 'html.parser', parse_only=only_p_tags)
-        return False if "ошибка" in soup.p.text else True
+        return "ошибка" not in soup.p.text
