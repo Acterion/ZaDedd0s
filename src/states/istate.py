@@ -22,7 +22,8 @@ class AState(IState, abc.ABC):
         try:
             await self.call_actions()
             self._next_state = self.select_next_state()
-        except RuntimeError:
+        except RuntimeError as e:
+            self._error_state.set_message(f'Error: {e}')
             self._next_state = self._error_state
 
     def next(self):
@@ -43,13 +44,3 @@ class AState(IState, abc.ABC):
     async def call_actions(self):
         pass
 
-
-class AErrorState(IState):
-    async def run(self):
-        self.finalize()
-
-    def next(self):
-        pass
-
-    def finalize(self):
-        pass
