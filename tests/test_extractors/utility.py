@@ -1290,3 +1290,114 @@ hidden_inputs_target = {
     'date': '26.08.2020',
     'dateStr': '26.08.2020'
 }
+
+html_doc_with_error ="""
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+	<base href="https://service2.diplo.de/rktermin/" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=10; IE=11" />
+	<title>
+		RK-Termin
+	</title>
+	<link rel="stylesheet" type="text/css" href="style_css/reset.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="style_css/screen.css" />
+	<link rel="stylesheet" type="text/css" media="print" href="style_css/print.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="style_css/rktermin.css" />
+
+	<!--[if gte IE 7]><link rel="stylesheet" type="text/css" media="screen" href="style_css/ie7.css" /><![endif]-->
+	<!--[if gte IE 6]><link rel="stylesheet" type="text/css" media="screen" href="style_css/ie6.css" /><![endif]-->
+	<!--[if lte IE 5.5000]><link rel="stylesheet" type="text/css" media="screen" href="style_css/ie5.css" /><![endif]-->
+
+
+	<link rel="stylesheet" type="text/css" href="css/redmond/jquery-ui-1.11.4.custom.min.css" />
+	<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.11.4.custom.min.js"></script>
+
+</head>
+
+<body>
+	<div id="global">
+
+		<div id="header">
+
+			<div id="logo">
+				<img src="style_images/auswaertiges-amt-logo-220x120.gif" alt="Auswärtiges Amt" />
+		</div>
+				<div id="logo-app"
+					style="background-image:  url('images/auswaertigesamt.gif'); min-height: 54px; width: 78%;">
+					&nbsp;
+				</div>
+				<div id="nav-main" style="min-height: 28px;">
+
+
+					<ul>
+						<li></li>
+					</ul>
+				</div>
+
+			</div> <!-- end: #header -->
+
+
+			<div id="main" class="l-s">
+
+				<div id="content">
+
+					<div class="wrapper">
+
+
+						<p style="font-size: 120%; color: red;">
+							При обработке Вашей записи на прием выявлена ошибка. Причиной может являться, например, то,
+							что окно браузера было открыто слишком долго или в строку с доменом страницы были внесены
+							изменения. Закройте окно и начните ввод снова.
+							<br />
+							<br />
+							<br />
+	ref-id: 51542F538B89B53B1825B484CEC1500C
+</p>
+					</div>
+
+					<div class="bottom"></div>
+
+				</div>
+
+				<div id="context">
+
+					<div class="wrapper">
+						&nbsp;
+					</div>
+
+				</div>
+
+			</div> <!-- end: #main -->
+			<div id="footer">
+
+
+
+
+				<div style="min-height: 15px;">
+					<ul>
+						<li>RK-Termin&nbsp;1.2.36.1</li>
+						<li style="margin-left: 5em;">
+
+							<a href="extern/dsgvo.do?request_locale=ru" target="_blank"
+								title="Информация о защите данных и правила пользования"><img
+					src="images/flags/ru.png"
+					alt="Информация о защите данных и правила пользования"
+					title="Информация о защите данных и правила пользования" />&nbsp; Информация
+					о защите данных и правила пользования</a>
+						</li>
+					</ul>
+				</div>
+
+
+
+			</div>
+		</div>
+</body>
+
+</html>
+"""
