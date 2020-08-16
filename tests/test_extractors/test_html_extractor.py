@@ -28,3 +28,9 @@ def test_extract_hidden_fields():
     extractor = ext.HtmlExtractor()
     res = extractor.extract_hidden_fields(samples.html_doc_with_form)
     assert res == samples.hidden_inputs_target
+
+
+def test_check_success():
+    extractor = ext.HtmlExtractor()
+    res = extractor.check_success(samples.html_doc_with_error)
+    assert not res
