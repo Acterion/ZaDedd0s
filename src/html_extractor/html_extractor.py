@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 
-import re
 
 only_captcha_tags = SoupStrainer("captcha")
 only_a_tags = SoupStrainer("a")
@@ -35,4 +34,4 @@ class HtmlExtractor:
 
     def check_success(self, html):
         soup = BeautifulSoup(html, 'html.parser', parse_only=only_p_tags)
-        return False if soup.find(text=re.compile('ошибка')) else True
+        return False if "ошибка" in soup.p.text else True
