@@ -8,4 +8,4 @@ def test_async_run_in_state():
 
     machine.exec()
 
-    final.assert_run_was_called()
+    assert final.run_was_called

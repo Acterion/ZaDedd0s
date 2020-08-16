@@ -8,7 +8,8 @@ class FFinalState(IState):
     async def run(self):
         self.run_was_called = True
 
-    def assert_run_was_called(self):
-        assert self.run_was_called
+    def run_was_called(self) -> bool:
+        return self.run_was_called
 
-    def next(self): pass
+    def next(self):
+        pass

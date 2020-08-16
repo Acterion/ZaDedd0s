@@ -1,12 +1,13 @@
 from src.states.initial import Initial
 from src.states.ddosing import Ddosing
 from src.states.penetration import Penetration
+from src.states.final_states import Error, Success
 
 
 class StatesFactory:
-    def __init__(self, state_actions, error_state):
+    def __init__(self, state_actions):
         self._state_actions = state_actions
-        self._error_state = error_state
+        self._error_state = self._make_error()
 
     def make_initial(self, ddosing=None) -> Initial:
         ddosing = self.make_ddosing() if ddosing is None else ddosing
@@ -31,8 +32,11 @@ class StatesFactory:
 
         return result
 
-    def make_success(self):
-        pass
+    def make_success(self) -> Success:
+        return Success(self._state_actions, 'Success!')
+
+    def _make_error(self):
+        return Error(self._state_actions)
 
     def _make_penetration(self, success, ddosing):
         return Penetration(self._state_actions, {'success': success, 'ddosing': ddosing}, self._error_state)
