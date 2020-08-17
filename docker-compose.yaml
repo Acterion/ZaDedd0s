@@ -7,8 +7,12 @@ services:
     restart: always
     secrets:
       - secret_token
+      - captcha_token
     environment:
       - bot_token=/run/secrets/secret_token
+      - captcha_user_key=/run/secrets/captcha_token
 secrets:
   secret_token:
     file: src/token.txt
+  captcha_token:
+    file: src/captcha_token.txt

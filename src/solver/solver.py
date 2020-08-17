@@ -1,17 +1,21 @@
 import aiohttp
+import os
+
+import src.utils.file_utils as file_uti
 
 
 class Solver:
     def __init__(self):
         self._solution = ''
         self._task_id = 0
+        self._client_key = file_uti.readFile(os.environ['captcha_user_key'])
         self._headers = {
             'Content-Type': 'application/json',
             'Connection': 'keep-alive'
         }
         self._create_task_url = 'https://api.anti-captcha.com/createTask'
         self._create_task_data = {
-                'clientKey': '5612b49bb41267b5a66d442e6fe2ee0a',
+                'clientKey': self._client_key,
                 'task': {
                     'type': 'ImageToTextTask',
                     'body': '',
@@ -25,13 +29,12 @@ class Solver:
         }
         self._get_result_url = 'https://api.anti-captcha.com/getTaskResult'
         self._task_id_data = {
-                'clientKey': '5612b49bb41267b5a66d442e6fe2ee0a',
+                'clientKey': self._client_key,
                 'taskId': self._task_id
             }
         self._report_url = 'https://api.anti-captcha.com/reportIncorrectImageCaptcha'
 
     async def solve_captcha(self, captcha_string):
-
         async with aiohttp.ClientSession() as session:
             self._create_task_data['body'] = captcha_string
             async with session.post(self._create_task_url, json=self._create_task_data, headers=self._headers) as resp:
