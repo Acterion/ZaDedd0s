@@ -11,6 +11,7 @@ beautifulsoup4 = "*"
 pytest-mock = "*"
 pytest = "*"
 aiohttp = "*"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.8"
