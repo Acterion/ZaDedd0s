@@ -157,3 +157,4 @@ dmypy.json
 .idea/
 
 src/token.txt
+src/captcha_token.txt
