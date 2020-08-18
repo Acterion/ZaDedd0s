@@ -80,3 +80,30 @@ async def test_try_to_reserve_place(mocker):
     target = (actions_and_boys.solver.get_last_solution(), fields, person)
     assert actions_and_boys.ddoser.send_final_form_was_called_with == target
 
+
+@pytest.mark.asyncio
+async def test_try_to_reserve_place_when_no_days_available(mocker):
+    actions_and_boys = make_actions_and_boys(mocker)
+    actions_and_boys.extractor.extract_time_href.return_value = ''
+
+    result = await actions_and_boys.actions.try_to_reserve_place('today')
+
+    assert not result
+
+    assert actions_and_boys.ddoser.get_day_was_called_with == 'today'
+    actions_and_boys.extractor.extract_time_href.assert_called_with('day form')
+
+
+@pytest.mark.asyncio
+async def test_try_to_reserve_place_when_no_time_available(mocker):
+    actions_and_boys = make_actions_and_boys(mocker)
+    actions_and_boys.extractor.extract_time_href.return_value = '11:00'
+    actions_and_boys.extractor.extract_hidden_fields.return_value = {}
+
+    result = await actions_and_boys.actions.try_to_reserve_place('today')
+
+    assert not result
+
+    assert actions_and_boys.ddoser.get_day_was_called_with == 'today'
+    actions_and_boys.extractor.extract_time_href.assert_called_with('day form')
+    assert actions_and_boys.ddoser.get_time_slot_was_called_with == '11:00'
