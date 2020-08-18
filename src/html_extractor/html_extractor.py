@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 
+from src.actions_executors.iexecutors import IHtmlExtractor
 
 only_captcha_tags = SoupStrainer("captcha")
 only_a_tags = SoupStrainer("a")
@@ -8,7 +9,7 @@ only_input_tags = SoupStrainer("input")
 only_p_tags = SoupStrainer("p")
 
 
-class HtmlExtractor:
+class HtmlExtractor(IHtmlExtractor):
     def extract_captcha(self, html):
         soup = BeautifulSoup(html, 'html.parser', parse_only=only_captcha_tags)
         result = soup.captcha.contents[1].get('style')[44:-78]
@@ -19,7 +20,7 @@ class HtmlExtractor:
         result = soup.find("a", "arrow").get("href")
         return result
 
-    def extract_time_slot_href(self, html):
+    def extract_time_href(self, html):
         soup = BeautifulSoup(html, 'html.parser', parse_only=only_a_tags)
         result = soup.find("a", string="Записаться на прием").get('href')
         return result

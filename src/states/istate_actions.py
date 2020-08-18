@@ -7,15 +7,15 @@ class IStateActions(abc.ABC):
         pass
 
     @abc.abstractmethod
-    async def check_free_places_in_current_month(self) -> bool:
+    async def check_free_places_in_current_month(self) -> str:
         pass
 
     @abc.abstractmethod
-    async def check_free_places_in_next_month(self) -> bool:
+    async def check_free_places_in_next_month(self) -> str:
         pass
 
     @abc.abstractmethod
-    async def try_to_reserve_place(self) -> bool:
+    async def try_to_reserve_place(self, detected_day_href: str) -> bool:
         pass
 
     @abc.abstractmethod
