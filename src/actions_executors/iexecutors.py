@@ -1,7 +1,7 @@
 import abc
 from collections import namedtuple
 
-PersonInfo = namedtuple('PersonInfo', 'name surname email residence passport')
+PersonInfo = namedtuple('PersonInfo', 'firstname lastname email residence passport')
 
 
 class IDdoser(abc.ABC):
