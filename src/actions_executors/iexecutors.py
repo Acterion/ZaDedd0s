@@ -18,7 +18,7 @@ class IDdoser(abc.ABC):
         pass
 
     @abc.abstractmethod
-    async def send_final_form(self, solved_captcha: str, hidden_fields: dict, person_info: PersonInfo):
+    async def send_final_form(self, solved_captcha: str, hidden_fields: dict, person_info: PersonInfo) -> str:
         pass
 
 
