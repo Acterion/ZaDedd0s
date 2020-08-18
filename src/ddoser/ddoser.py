@@ -33,13 +33,13 @@ class Ddoser(IDdoser):
     async def get_day(self, day_href: str) -> str:
         day_href = self._domain + day_href
         async with aiohttp.ClientSession() as session:
-            async with session.post(day_href, data=self._data, headers=self._headers) as r:
+            async with session.get(day_href, headers=self._headers) as r:
                 return await r.text()
 
     async def get_time_slot(self, time_href: str) -> str:
         time_href = self._domain + time_href
         async with aiohttp.ClientSession() as session:
-            async with session.post(time_href, data=self._data, headers=self._headers) as r:
+            async with session.get(time_href, headers=self._headers) as r:
                 return await r.text()
 
     async def send_final_form(self, solved_captcha: str, hidden_fields: dict, person_info: PersonInfo) -> str:
