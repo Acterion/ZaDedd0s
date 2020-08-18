@@ -4,7 +4,7 @@ from collections import namedtuple
 PersonInfo = namedtuple('PersonInfo', 'firstname lastname email residence passport')
 
 
-class IDdoser(abs.ABC):
+class IDdoser(abc.ABC):
     @abc.abstractmethod
     async def get_month(self, date: str, solved_captcha: str = None) -> str:
         pass
