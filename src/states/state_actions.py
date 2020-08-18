@@ -63,8 +63,15 @@ class StateActions(IStateActions):
         day_in_response = await self._ddoser.get_day(detected_day_href)
         time_href = self._extractor.extract_time_href(day_in_response)
 
+        if not time_href:
+            return False
+
         time_form_in_response = await self._ddoser.get_time_slot(time_href)
         hidden_fields = self._extractor.extract_hidden_fields(time_form_in_response)
+
+        if not hidden_fields:
+            return False
+
         captcha = self._extractor.extract_captcha(time_form_in_response)
         solution = await self._solver.solve(captcha)
         info = self._info_getter.get_person_info()
