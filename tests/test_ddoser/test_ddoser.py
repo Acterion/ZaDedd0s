@@ -1,6 +1,6 @@
 import pytest
 
-from src.ddoser.ddoser import Ddoser
+from src.actions_executors.ddoser import Ddoser
 import tests.test_ddoser.samples as samples
 
 

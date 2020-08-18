@@ -1,4 +1,4 @@
-import src.html_extractor.html_extractor as ext
+import src.actions_executors.html_extractor as ext
 
 import tests.test_extractors.utility as samples
 
