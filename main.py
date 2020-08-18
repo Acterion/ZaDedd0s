@@ -1,7 +1,7 @@
 import os
 
 import src.utils.file_utils as file_uti
-from src.bot.bot import DDBot
+from src.actions_executors.bot import DDBot
 
 
 def main():

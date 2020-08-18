@@ -1,6 +1,6 @@
 import pytest
 
-from src.solver.solver import Solver
+from src.actions_executors.solver import Solver
 import tests.test_solver.samples as samples
 
 
