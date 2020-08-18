@@ -20,7 +20,7 @@ def test_extract_day_href():
 def test_extract_time_slot_href():
     extractor = ext.HtmlExtractor()
     target = "extern/appointment_showForm.do?locationCode=nowo&realmId=1098&categoryId=2266&dateStr=26.08.2020&openingPeriodId=51082"
-    res = extractor.extract_time_slot_href(samples.html_doc_with_time_slot)
+    res = extractor.extract_time_href(samples.html_doc_with_time_slot)
     assert res == target
 
 

@@ -1,6 +1,6 @@
 import aiohttp
 import atexit
-from src.ddoser.iddoser import IDdoser, PersonInfo
+from src.actions_executors.iexecutors import IDdoser, PersonInfo
 
 
 class Ddoser(IDdoser):

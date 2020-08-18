@@ -12,6 +12,7 @@ pytest-asyncio = "*"
 python-telegram-bot = "*"
 beautifulsoup4 = "*"
 python-dateutil = "*"
+aiohttp = "*"
 
 [requires]
 python_version = "3.8"
