@@ -5,13 +5,15 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 import src.bot.menu as menu
 
+from src.actions_executors.iexecutors import ITelegramBot
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
 
-class DDBot:
+class DDBot(ITelegramBot):
     def __init__(self, token):
         self._bot = Bot(token)
         self._updater = Updater(token, use_context=True)
@@ -32,10 +34,10 @@ class DDBot:
 
     def echo(self, update, context):
         """Echo the user message."""
-        self.broadcast_message(update.message.text)
+        self.notify_subscribers(update.message.text)
         # update.message.reply_text(update.message.text)
 
-    def broadcast_message(self, message):
+    def notify_subscribers(self, message):
         """Broadcast message to all subs."""
         for sub in self._menu.get_subs():
             self._bot.send_message(sub, message)

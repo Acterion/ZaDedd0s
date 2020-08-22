@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 from collections import namedtuple
 
@@ -24,40 +26,40 @@ FSMAndPenetratingBoys = namedtuple('FSMAndDdosingBoys', FSMAndBoys._fields + ('p
 @pytest.fixture
 def fsm_and_ddosing_boys() -> FSMAndDdosingBoys:
     actions, factory, ddosing = boys()
-    fsm = StateMachine(factory.make_initial(ddosing))
+    fsm = StateMachine(factory.make_initial(ddosing), asyncio.get_event_loop())
     return FSMAndDdosingBoys(fsm, actions, factory, ddosing)
 
 
 @pytest.fixture
 def fsm_and_failing_boys() -> FSMAndBoys:
     actions, factory, *_ = boys(network_error=True)
-    fsm = StateMachine(factory.make_initial())
+    fsm = StateMachine(factory.make_initial(), asyncio.get_event_loop())
     return FSMAndBoys(fsm, actions, factory)
 
 
 @pytest.fixture
 def fsm_and_penetrating_this_month_boys() -> FSMAndPenetratingBoys:
     actions, factory, penetration = boys(free_places_in_current_month=True)
-    fsm = StateMachine(factory.make_ddosing(penetration))
+    fsm = StateMachine(factory.make_ddosing(penetration), asyncio.get_event_loop())
     return FSMAndPenetratingBoys(fsm, actions, factory, penetration)
 
 
 @pytest.fixture
 def fsm_and_penetrating_next_month_boys() -> FSMAndPenetratingBoys:
     actions, factory, penetration = boys(free_places_in_next_month=True)
-    fsm = StateMachine(factory.make_ddosing(penetration))
+    fsm = StateMachine(factory.make_ddosing(penetration), asyncio.get_event_loop())
     return FSMAndPenetratingBoys(fsm, actions, factory, penetration)
 
 
 @pytest.fixture
 def fsm_and_failed_penetration_boys() -> FSMAndDdosingBoys:
     actions, factory, ddosing = boys(place_reserved=False)
-    fsm = StateMachine(factory.make_penetration(ddosing=ddosing))
+    fsm = StateMachine(factory.make_penetration(ddosing=ddosing), asyncio.get_event_loop())
     return FSMAndDdosingBoys(fsm, actions, factory, ddosing)
 
 
 @pytest.fixture
 def fsm_and_penetrated_boys() -> FSMAndBoys:
     actions, factory, *_ = boys(place_reserved=True)
-    fsm = StateMachine(factory.make_penetration())
+    fsm = StateMachine(factory.make_penetration(), asyncio.get_event_loop())
     return FSMAndBoys(fsm, actions, factory)

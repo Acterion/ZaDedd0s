@@ -1,16 +1,39 @@
-from src.event_loop.event_loop import Loop
+import abc
+from asyncio import AbstractEventLoop
+
+
+class IStateMachine(abc.ABC):
+    @abc.abstractmethod
+    def is_running(self):
+        pass
+
+    @abc.abstractmethod
+    def start(self):
+        pass
+
+    @abc.abstractmethod
+    def stop(self):
+        pass
 
 
 class StateMachine:
-    def __init__(self, initial_state):
+    def __init__(self, initial_state, loop: AbstractEventLoop):
         self._current_state = initial_state
-        self._loop = Loop()
+        self._loop = loop
+        self._is_running = False
 
-    def exec(self):
-        self._loop.run_until_complete(self._exec_impl)
+    def is_running(self):
+        return self._is_running
 
-    async def _exec_impl(self):
-        while self._current_state:
+    def stop(self):
+        self._is_running = False
+
+    def start(self):
+        self._is_running = True
+        self._loop.run_until_complete(self._exec())
+
+    async def _exec(self):
+        while self._current_state and self._is_running:
             await self._proceed_state()
 
     async def _proceed_state(self):
