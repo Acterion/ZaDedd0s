@@ -1,6 +1,8 @@
-import os
-
-
-def readFile(path):
-    with open(os.environ['bot_token'], "r") as f:
+def read_file(path):
+    with open(path, "r") as f:
         return f.read()
+
+
+def write_file(path, data):
+    with open(path, 'w') as f:
+        f.write(data)

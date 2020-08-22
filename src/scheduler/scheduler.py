@@ -15,3 +15,10 @@ class Scheduler:
 
     def exec_now(self, callback, arg=None):
         self._loop.call_soon(callback, arg)
+
+    def set_interval(self, interval, callback, arg=None):
+        def func_wrapper(w_arg=None):
+            self.set_interval(interval, callback, w_arg)
+            callback(w_arg)
+        handler = self._loop.call_later(interval, func_wrapper, arg)
+        return handler

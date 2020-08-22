@@ -19,7 +19,7 @@ class Operator:
         self._loop = asyncio.get_event_loop()
         self._start_time = start_time if start_time else datetime.today().replace(hour=8, minute=00, second=00)
         self._stop_time = stop_time if stop_time else self._start_time + timedelta(hours=12)
-        self._bot_token = bot_token if bot_token else file_uti.readFile(os.environ['bot_token'])
+        self._bot_token = bot_token if bot_token else file_uti.read_file(os.environ['bot_token'])
         self._bot = DDBot(self._bot_token)
         self._bot.start_bot()
         self._s_actions = StateActions(Ddoser(), HtmlExtractor(), self._bot, Solver(), PersonInfoGetter())
