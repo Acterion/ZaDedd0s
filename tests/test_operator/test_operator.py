@@ -2,7 +2,7 @@ from asyncio.events import TimerHandle
 from datetime import datetime
 from unittest.mock import call
 
-from src.operator.operator import Operator, default_machine_stop_and_start_time
+from src.operator.operator import Operator, default_machine_stop_and_start_time, OperatorClocks, IOperatorClocks
 from src.scheduler.scheduler import IScheduler
 from src.states.state_machine import IStateMachine
 
@@ -31,12 +31,22 @@ class MStateMachine(IStateMachine):
         pass
 
 
+class MClocks(IOperatorClocks):
+    def __init__(self, mocker):
+        mocker.patch.object(self, 'shutdown_and_next_start_times')
+
+    def shutdown_and_next_start_times(self, real_start_time: datetime) -> (datetime, datetime):
+        pass
+
+
 def test_machine_start(mocker):
+    clocks = MClocks(mocker)
     scheduler = MScheduler(mocker)
     machine = MStateMachine(mocker)
     stop, start = default_machine_stop_and_start_time()
+    clocks.shutdown_and_next_start_times.return_value = (stop, start)
 
-    operator = Operator(scheduler, machine)
+    operator = Operator(scheduler, machine, clocks)
     operator.start_machine()
 
     machine.start.assert_called_once()
@@ -45,7 +55,7 @@ def test_machine_start(mocker):
 
 def test_machine_stop(mocker):
     machine = MStateMachine(mocker)
-    operator = Operator(MScheduler(mocker), machine)
+    operator = Operator(MScheduler(mocker), machine, MClocks(mocker))
 
     operator.stop_machine()
 
