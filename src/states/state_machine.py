@@ -1,4 +1,19 @@
+import abc
 from asyncio import AbstractEventLoop
+
+
+class IStateMachine(abc.ABC):
+    @abc.abstractmethod
+    def is_running(self):
+        pass
+
+    @abc.abstractmethod
+    def start(self):
+        pass
+
+    @abc.abstractmethod
+    def stop(self):
+        pass
 
 
 class StateMachine:
@@ -7,20 +22,17 @@ class StateMachine:
         self._loop = loop
         self._is_running = False
 
-    def running(self):
+    def is_running(self):
         return self._is_running
 
-    def shutdown(self):
+    def stop(self):
         self._is_running = False
 
     def start(self):
         self._is_running = True
-        self._exec()
+        self._loop.run_until_complete(self._exec())
 
-    def exec(self):
-        self._loop.run_until_complete(self._exec_impl)
-
-    async def _exec_impl(self):
+    async def _exec(self):
         while self._current_state and self._is_running:
             await self._proceed_state()
 

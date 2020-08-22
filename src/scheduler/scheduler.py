@@ -1,17 +1,19 @@
+import abc
 from asyncio import AbstractEventLoop, TimerHandle
+from datetime import datetime
 
 
-class Scheduler:
+class IScheduler(abc.ABC):
+    @abc.abstractmethod
+    def schedule(self, when: datetime, callback, *args) -> TimerHandle:
+        pass
+
+
+class Scheduler(IScheduler):
     def __init__(self, loop: AbstractEventLoop):
         self._loop = loop
 
-    def schedule(self, timestamp, callback, arg=None) -> TimerHandle:
-        handler = self._loop.call_at(timestamp, callback, arg)
-        return handler
+    def schedule(self, timestamp: datetime, callback, *args) -> TimerHandle:
+        delay = round(timestamp.timestamp() - datetime.now().timestamp())
+        return self._loop.call_later(delay, callback, *args)
 
-    def set_timeout(self, delay, callback, arg=None) -> TimerHandle:
-        handler = self._loop.call_later(delay, callback, arg)
-        return handler
-
-    def exec_now(self, callback, arg=None):
-        self._loop.call_soon(callback, arg)

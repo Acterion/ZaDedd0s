@@ -1,10 +1,18 @@
+import abc
+
 from src.states.initial import Initial
 from src.states.ddosing import Ddosing
 from src.states.penetration import Penetration
 from src.states.final_states import Error, Success
 
 
-class StatesFactory:
+class IInitialStateFactory(abc.ABC):
+    @abc.abstractmethod
+    def make_initial(self, ddosing=None) -> Initial:
+        pass
+
+
+class StatesFactory(IInitialStateFactory):
     def __init__(self, state_actions):
         self._state_actions = state_actions
         self._error_state = self._make_error()
