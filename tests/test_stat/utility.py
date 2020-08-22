@@ -1,11 +1,21 @@
-from src.stat.stat import StatData, StatisticsCollector, Report
+from src.stat.stat import StatisticsCollector
+from src.stat.data import StatData, Report
 import time
+from unittest import mock
 
-prefilled_stat_data = StatData(None, 7, 8, 5, 6, 9, 3, 4, True, 1000, 1000, 2000, 1, 2)
 
-prefilled_statistics_collector = StatisticsCollector(prefilled_stat_data)
+class MStatisticsCollector(StatisticsCollector):
+    async def get_balance(self):
+        time.sleep(1)
+        return 9.9944
 
-prefilled_report = Report(7, 5, 6, 9.9944, 4, "Up", round(time.time()) - 1000, 1, 2)
+    def load_key(self):
+        return None
+
+
+prefilled_stat_data = StatData('test_stat_filled.txt')
+
+prefilled_report = Report(7, 5, 6, 9.9944, 4, "Up", round(time.time()) - 999, 1, 2)
 
 filled = '''{
     "avg_captcha_count": 1,

@@ -1,30 +1,26 @@
 from src.stat.stat import StatisticsCollector
 from src.utils.file_utils import read_file, write_file
 import tests.test_stat.utility as samples
+from tests.test_stat.utility import MStatisticsCollector
 import pytest
 import time
 
 
 def test_load():
-    stat = StatisticsCollector()
-    stat.load('test_stat_filled.txt')
-
+    stat = MStatisticsCollector('test_stat_filled.txt')
     assert stat.get_stat().__dict__ == samples.prefilled_stat_data.__dict__
 
 
-def test_save():
+def closed_test_save():
     write_file('test_stat_temp.txt', '')
-
-    stat = StatisticsCollector()
-    stat.load('test_stat_filled.txt')
+    stat = MStatisticsCollector('test_stat_filled.txt')
     stat.save('test_stat_temp.txt')
 
     assert read_file('test_stat_temp.txt') == samples.filled
 
 
 def test_register_uptime():
-    stat = StatisticsCollector()
-    stat.load('test_stat_empty.txt')
+    stat = MStatisticsCollector('test_stat_empty.txt')
 
     assert not stat.get_stat().current_state
     stat.register_uptime()
@@ -33,8 +29,7 @@ def test_register_uptime():
 
 
 def test_register_downtime():
-    stat = StatisticsCollector()
-    stat.load('test_stat_filled.txt')
+    stat = MStatisticsCollector('test_stat_filled.txt')
 
     assert stat.get_stat().current_state
     stat.register_downtime()
@@ -48,8 +43,7 @@ def test_register_downtime():
 
 
 def test_add_solved_captcha():
-    stat = StatisticsCollector()
-    stat.load('test_stat_filled.txt')
+    stat = MStatisticsCollector('test_stat_filled.txt')
 
     stat.add_captcha(1, True)
     sd = stat.get_stat()
@@ -61,8 +55,7 @@ def test_add_solved_captcha():
 
 
 def test_add_rejected_captcha():
-    stat = StatisticsCollector()
-    stat.load('test_stat_filled.txt')
+    stat = MStatisticsCollector('test_stat_filled.txt')
 
     stat.add_captcha(1, False)
     sd = stat.get_stat()
@@ -75,6 +68,11 @@ def test_add_rejected_captcha():
 
 @pytest.mark.asyncio
 async def test_get_report():
-    stat = StatisticsCollector()
-    stat.load('test_stat_filled.txt')
+    stat = MStatisticsCollector('test_stat_filled.txt')
     assert await stat.get_report() == samples.prefilled_report
+
+
+@pytest.mark.asyncio
+async def closed_test_get_balance():
+    stat = StatisticsCollector('test_stat_filled.txt')
+    assert stat.get_balance() == 9.9944
