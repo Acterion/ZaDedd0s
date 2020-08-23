@@ -16,7 +16,7 @@ class IStateMachine(abc.ABC):
         pass
 
 
-class StateMachine:
+class StateMachine(IStateMachine):
     def __init__(self, initial_state, loop: AbstractEventLoop):
         self._current_state = initial_state
         self._loop = loop

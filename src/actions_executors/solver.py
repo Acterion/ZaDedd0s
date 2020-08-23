@@ -3,10 +3,12 @@ import os
 
 import src.utils.file_utils as file_uti
 from src.actions_executors.iexecutors import ICaptchaSolver
+from src.statistics.istatistics import ISolverStatistics
 
 
 class Solver(ICaptchaSolver):
-    def __init__(self):
+    def __init__(self, stat: ISolverStatistics):
+        self._stat = stat
         self._solution = ''
         self._task_id = 0
         self._client_key = file_uti.readFile(os.environ['captcha_user_key'])
@@ -46,7 +48,7 @@ class Solver(ICaptchaSolver):
                 async with session.post(self._get_result_url, json=self._task_id_data, headers=self._headers) as resp:
                     status = (await resp.json())['status']
                     self._solution = (await resp.json())['solution']['text']
-
+        self._stat.add_captcha(0.5e-1000, True)
         return self._solution
 
     async def report_incorrect(self):

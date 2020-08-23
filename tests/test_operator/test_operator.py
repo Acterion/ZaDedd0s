@@ -5,6 +5,7 @@ from unittest.mock import call
 from src.operator.operator import Operator, default_machine_stop_and_start_time, OperatorClocks, IOperatorClocks
 from src.scheduler.scheduler import IScheduler
 from src.states.state_machine import IStateMachine
+from src.statistics.istatistics import IOperatorStatistics
 
 
 class MScheduler(IScheduler):
@@ -39,6 +40,14 @@ class MClocks(IOperatorClocks):
         pass
 
 
+class MOperatorStatistics(IOperatorStatistics):
+    def register_uptime(self):
+        pass
+
+    def register_downtime(self):
+        pass
+
+
 def test_machine_start(mocker):
     clocks = MClocks(mocker)
     scheduler = MScheduler(mocker)
@@ -46,7 +55,7 @@ def test_machine_start(mocker):
     stop, start = default_machine_stop_and_start_time()
     clocks.shutdown_and_next_start_times.return_value = (stop, start)
 
-    operator = Operator(scheduler, machine, clocks)
+    operator = Operator(scheduler, machine, clocks, MOperatorStatistics())
     operator.start_machine()
 
     machine.start.assert_called_once()
@@ -55,7 +64,7 @@ def test_machine_start(mocker):
 
 def test_machine_stop(mocker):
     machine = MStateMachine(mocker)
-    operator = Operator(MScheduler(mocker), machine, MClocks(mocker))
+    operator = Operator(MScheduler(mocker), machine, MClocks(mocker), MOperatorStatistics())
 
     operator.stop_machine()
 
