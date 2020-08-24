@@ -1,5 +1,5 @@
 import abc
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from dateutil.relativedelta import relativedelta
 
@@ -21,11 +21,12 @@ class IOperatorClocks(abc.ABC):
 
 class OperatorClocks(IOperatorClocks):
     def __init__(self, start_time_hour=8, uptime_duration_hours=12, now: datetime = datetime.now()):
+        self._current_start_time = datetime.now().replace(hour=start_time_hour)
         self._shutdown_time, self._next_start_time = default_machine_stop_and_start_time(start_time_hour,
                                                                                          uptime_duration_hours, now)
 
-    def shutdown_and_next_start_times(self, real_start_time: datetime) -> (datetime, datetime):
-        if real_start_time >= self._shutdown_time:
+    def shutdown_and_next_start_times(self, real_start_time: time) -> (datetime, datetime):
+        if real_start_time >= self._shutdown_time.time() or real_start_time <= self._current_start_time.time():
             raise RuntimeError('F*ck you!')
         return self._shutdown_time, self._next_start_time
 
