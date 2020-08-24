@@ -25,3 +25,6 @@ class Backend:
 
     def stop_machine(self):
         self._operator.stop_machine()
+
+    async def get_report(self):
+        return await self._statistics_collector.get_report()
