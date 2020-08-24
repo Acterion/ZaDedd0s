@@ -26,6 +26,7 @@ class OperatorClocks(IOperatorClocks):
                                                                                          uptime_duration_hours, now)
 
     def shutdown_and_next_start_times(self, real_start_time: time) -> (datetime, datetime):
+        print(f'real {real_start_time}, up {self._current_start_time.time()}, down {self._shutdown_time.time()}')
         if real_start_time >= self._shutdown_time.time() or real_start_time <= self._current_start_time.time():
             raise RuntimeError('F*ck you!')
         return self._shutdown_time, self._next_start_time
