@@ -44,17 +44,20 @@ class Solver(ICaptchaSolver):
                 self._task_id = (await resp.json())['taskId']
 
             status = ''
+            response = None
             while status != 'ready':
                 async with session.post(self._get_result_url, json=self._task_id_data, headers=self._headers) as resp:
-                    status = (await resp.json())['status']
-                    self._solution = (await resp.json())['solution']['text']
-        self._stat.add_captcha(0.5e-1000, True)
+                    response = await resp.json()
+                    status = response['status']
+                    self._solution = response['solution']['text']
+
+        self._stat.add_captcha(response['cost'], True)
         return self._solution
 
     async def report_incorrect(self):
         async with aiohttp.ClientSession() as session:
             async with session.post(self._report_url, json=self._task_id_data, headers=self._headers) as resp:
-                return (await resp.json())['status'] == "success"
+                return (await resp.json())['status'] == 'success'
 
     def get_last_solution(self) -> str:
         return self._solution
