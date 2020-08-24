@@ -11,7 +11,7 @@ class Solver(ICaptchaSolver):
         self._stat = stat
         self._solution = ''
         self._task_id = 0
-        self._client_key = file_uti.readFile(os.environ['captcha_user_key'])
+        self._client_key = file_uti.read_file(os.environ['captcha_user_key'])
         self._headers = {
             'Content-Type': 'application/json',
             'Connection': 'keep-alive'
