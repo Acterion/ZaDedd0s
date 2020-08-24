@@ -1,4 +1,4 @@
-from src.stat.stat import StatisticsCollector
+from src.statistics.statistics import StatisticsCollector
 import time
 
 

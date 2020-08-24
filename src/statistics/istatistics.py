@@ -1,8 +1,6 @@
 import abc
 
-
-class Report:
-    pass
+from src.statistics.data import Report
 
 
 class IReporter(abc.ABC):
