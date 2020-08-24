@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from src.scheduler.scheduler import IScheduler
 from src.states.state_machine import IStateMachine
+from src.statistics.istatistics import IOperatorStatistics
 
 
 def default_machine_stop_and_start_time(start_time_hour=8, uptime_duration_hours=12, now: datetime = datetime.now()):
@@ -30,10 +31,12 @@ class OperatorClocks(IOperatorClocks):
 
 
 class Operator:
-    def __init__(self, scheduler: IScheduler, machine: IStateMachine, clocks: IOperatorClocks):
+    def __init__(self, scheduler: IScheduler, machine: IStateMachine, clocks: IOperatorClocks,
+                 stat: IOperatorStatistics):
         self._scheduler = scheduler
         self._machine = machine
         self._clocks = clocks
+        self._stat = stat
 
         self._start_time = None
         self._stop_time = None
@@ -45,6 +48,8 @@ class Operator:
         self._stop_time, self._start_time = self._clocks.shutdown_and_next_start_times(datetime.now())
         self._stopper = self._scheduler.schedule(self._stop_time, self._machine.stop)
         self._starter = self._scheduler.schedule(self._start_time, self._machine.start)
+        self._stat.register_uptime()
 
     def stop_machine(self):
         self._machine.stop()
+        self._stat.register_downtime()

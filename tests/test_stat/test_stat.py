@@ -6,7 +6,7 @@ import pytest
 
 
 def test_load(mocker):
-    mocker.patch('src.stat.data.read_file', return_value=samples.filled_json)
+    mocker.patch('src.statistics.data.read_file', return_value=samples.filled_json)
     stat = MStatisticsCollector()
 
     assert stat.get_stat().__dict__ == samples.filled_dict
@@ -21,7 +21,7 @@ def closed_test_save():
 
 
 def test_register_uptime(mocker):
-    mocker.patch('src.stat.data.read_file', return_value=samples.empty_json)
+    mocker.patch('src.statistics.data.read_file', return_value=samples.empty_json)
     stat = MStatisticsCollector()
 
     assert not stat.get_stat().current_state
@@ -31,7 +31,7 @@ def test_register_uptime(mocker):
 
 
 def test_register_downtime(mocker):
-    mocker.patch('src.stat.data.read_file', return_value=samples.filled_json)
+    mocker.patch('src.statistics.data.read_file', return_value=samples.filled_json)
     stat = MStatisticsCollector()
 
     assert stat.get_stat().current_state
@@ -46,7 +46,7 @@ def test_register_downtime(mocker):
 
 
 def test_add_solved_captcha(mocker):
-    mocker.patch('src.stat.data.read_file', return_value=samples.filled_json)
+    mocker.patch('src.statistics.data.read_file', return_value=samples.filled_json)
     stat = MStatisticsCollector()
 
     stat.add_captcha(1, True)
@@ -59,7 +59,7 @@ def test_add_solved_captcha(mocker):
 
 
 def test_add_rejected_captcha(mocker):
-    mocker.patch('src.stat.data.read_file', return_value=samples.filled_json)
+    mocker.patch('src.statistics.data.read_file', return_value=samples.filled_json)
     stat = MStatisticsCollector()
 
     stat.add_captcha(1, False)
@@ -73,7 +73,7 @@ def test_add_rejected_captcha(mocker):
 
 @pytest.mark.asyncio
 async def test_get_report(mocker):
-    mocker.patch('src.stat.data.read_file', return_value=samples.filled_json)
+    mocker.patch('src.statistics.data.read_file', return_value=samples.filled_json)
     stat = MStatisticsCollector()
 
     assert (await stat.get_report()).balance == 9.9944
@@ -82,6 +82,6 @@ async def test_get_report(mocker):
 
 @pytest.mark.asyncio
 async def closed_test_get_balance(mocker):
-    mocker.patch('src.stat.data.read_file', return_value=samples.filled_json)
+    mocker.patch('src.statistics.data.read_file', return_value=samples.filled_json)
     stat = MStatisticsCollector()
     assert stat.get_balance() == 9.9944

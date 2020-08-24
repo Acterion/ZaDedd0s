@@ -1,10 +1,11 @@
 import aiohttp
 import atexit
 from src.actions_executors.iexecutors import IDdoser, PersonInfo
+from src.statistics.istatistics import IDdoserStatistics
 
 
 class Ddoser(IDdoser):
-    def __init__(self, city_data: dict = None, cookies: dict = None):
+    def __init__(self, city_data: dict = None, cookies: dict = None, stat: IDdoserStatistics = None):
         self._headers = {
             'Accept': '*/*',
             'Accept-Encoding': 'gzip, deflate, br',
@@ -26,6 +27,7 @@ class Ddoser(IDdoser):
         self._final_url = 'https://service2.diplo.de/rktermin/extern/appointment_showForm.do'
         self._cookies = cookies
         self._session = aiohttp.ClientSession(cookies=self._cookies)
+        self._stat = stat
         atexit.register(self.cleanup)
 
     def cleanup(self):
@@ -37,6 +39,7 @@ class Ddoser(IDdoser):
         self._data['dateStr'] = date
         async with self._session.post(self._month_url, data=self._data, headers=self._headers) as r:
             self._data.pop('captchaText')
+            self._stat.add_page_update()
             return await r.text()
 
     async def get_day(self, day_href: str) -> str:

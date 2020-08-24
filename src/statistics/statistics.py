@@ -1,12 +1,14 @@
+from src.statistics.istatistics import IReporter, IOperatorStatistics, ISolverStatistics, IDdoserStatistics, Report
+
 import os
 import time
 
 from src.utils.file_utils import read_file
 from src.utils.network_utils import post
-from src.stat.data import StatData
+from src.statistics.data import StatData
 
 
-class StatisticsCollector:
+class StatisticsCollector(IReporter, IOperatorStatistics, ISolverStatistics, IDdoserStatistics):
     def __init__(self, path='stat.txt'):
         self._stat = None
         self.load(path)
