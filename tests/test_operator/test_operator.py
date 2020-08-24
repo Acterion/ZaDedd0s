@@ -1,6 +1,8 @@
 from asyncio.events import TimerHandle
-from datetime import datetime
+from datetime import datetime, time
 from unittest.mock import call
+
+import pytest
 
 from src.operator.operator import Operator, default_machine_stop_and_start_time, OperatorClocks, IOperatorClocks
 from src.scheduler.scheduler import IScheduler
@@ -69,3 +71,12 @@ def test_machine_stop(mocker):
     operator.stop_machine()
 
     machine.stop.assert_called_once()
+
+
+def test_operator_fail(mocker):
+    machine = MStateMachine(mocker)
+    o = Operator(MScheduler(mocker), machine, OperatorClocks(), MOperatorStatistics())
+    h = datetime.now().time().hour
+    if h > 20 or h < 8:
+        with pytest.raises(RuntimeError) as _:
+            o.start_machine()

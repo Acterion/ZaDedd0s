@@ -15,7 +15,7 @@ def default_machine_stop_and_start_time(start_time_hour=8, uptime_duration_hours
 
 class IOperatorClocks(abc.ABC):
     @abc.abstractmethod
-    def shutdown_and_next_start_times(self, real_start_time: datetime) -> (datetime, datetime):
+    def shutdown_and_next_start_times(self, real_start_time: time) -> (datetime, datetime):
         pass
 
 
@@ -46,7 +46,7 @@ class Operator:
 
     def start_machine(self):
         self._machine.start()
-        self._stop_time, self._start_time = self._clocks.shutdown_and_next_start_times(datetime.now())
+        self._stop_time, self._start_time = self._clocks.shutdown_and_next_start_times(datetime.now().time())
         self._stopper = self._scheduler.schedule(self._stop_time, self._machine.stop)
         self._starter = self._scheduler.schedule(self._start_time, self._machine.start)
         self._stat.register_uptime()
