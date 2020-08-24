@@ -5,7 +5,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 import src.bot.menu as menu
 
-from src.actions_executors.iexecutors import ITelegramBot
+import src.backend.backend as backend
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -13,12 +13,13 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-class DDBot(ITelegramBot):
+class DDBot:
     def __init__(self, token):
         self._bot = Bot(token)
         self._updater = Updater(token, use_context=True)
         self._dp = self._updater.dispatcher
-        self._menu = menu.Menu(self._bot)
+        self._backend = backend.Backend(self)
+        self._menu = menu.Menu(self._bot, self._backend)
 
     def add_handlers(self):
         """Add commands and message handlers."""

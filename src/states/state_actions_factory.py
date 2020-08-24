@@ -1,6 +1,6 @@
 import abc
 
-from src.actions_executors.bot import DDBot
+from src.bot.bot import DDBot
 from src.actions_executors.ddoser import Ddoser
 from src.actions_executors.html_extractor import HtmlExtractor
 from src.actions_executors.solver import Solver

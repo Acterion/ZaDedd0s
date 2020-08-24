@@ -1,4 +1,4 @@
-from src.actions_executors.bot import DDBot
+from src.bot.bot import DDBot
 from src.actions_executors.iexecutors import ITelegramBot
 
 
