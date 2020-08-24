@@ -4,7 +4,6 @@ import time
 
 class MStatisticsCollector(StatisticsCollector):
     async def get_balance(self):
-        time.sleep(1)
         return 9.9944
 
     def load_key(self):
