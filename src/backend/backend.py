@@ -18,6 +18,7 @@ class Backend:
 
         self._operator = Operator(self._scheduler, StateMachine(initial_state, loop), OperatorClocks(),
                                   self._statistics_collector)
+        loop.run_forever()
 
     def start_machine(self):
         self._operator.start_machine()
