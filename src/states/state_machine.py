@@ -1,4 +1,5 @@
 import abc
+import asyncio
 from asyncio import AbstractEventLoop
 
 
@@ -30,7 +31,7 @@ class StateMachine(IStateMachine):
 
     def start(self):
         self._is_running = True
-        self._loop.run_until_complete(self._exec())
+        asyncio.ensure_future(self._exec(), loop=self._loop)
 
     async def _exec(self):
         while self._current_state and self._is_running:
