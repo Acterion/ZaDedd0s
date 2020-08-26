@@ -1,7 +1,6 @@
 import logging
 
-from telegram import Bot
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from aiogram import Bot, Dispatcher, executor, types
 
 import src.bot.menu as menu
 
@@ -16,22 +15,20 @@ logger = logging.getLogger(__name__)
 class DDBot:
     def __init__(self, token):
         self._bot = Bot(token)
-        self._updater = Updater(token, use_context=True)
-        self._dp = self._updater.dispatcher
+        self._dp = Dispatcher(self._bot)
         self._backend = backend.Backend(self)
         self._menu = menu.Menu(self._bot, self._backend)
 
     def add_handlers(self):
         """Add commands and message handlers."""
-        self._dp.add_handler(CommandHandler("key", self._menu.open_keyboard))
+        self._dp.register_message_handler(self._menu.open_keyboard, commands=['start'])
         self._menu.add_handlers(self._dp)
-        self._dp.add_handler(MessageHandler(Filters.text & ~Filters.command, self.echo))
+        self._dp.register_message_handler(self.echo)
 
     def start_bot(self):
         """Start the bot."""
         self.add_handlers()
-        self._updater.start_polling()
-        self._updater.idle()
+        executor.start_polling(self._dp, skip_updates=True)
 
     def echo(self, update, context):
         """Echo the user message."""

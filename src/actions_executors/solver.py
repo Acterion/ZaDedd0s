@@ -7,11 +7,11 @@ from src.statistics.istatistics import ISolverStatistics
 
 
 class Solver(ICaptchaSolver):
-    def __init__(self, stat: ISolverStatistics):
+    def __init__(self, stat: ISolverStatistics, user_key):
         self._stat = stat
         self._solution = ''
         self._task_id = 0
-        self._client_key = file_uti.read_file(os.environ['captcha_user_key'])
+        self._client_key = user_key
         self._headers = {
             'Content-Type': 'application/json',
             'Connection': 'keep-alive'
@@ -39,9 +39,9 @@ class Solver(ICaptchaSolver):
 
     async def solve(self, captcha_string):
         async with aiohttp.ClientSession() as session:
-            self._create_task_data['body'] = captcha_string
+            self._create_task_data['task']['body'] = captcha_string
             async with session.post(self._create_task_url, json=self._create_task_data, headers=self._headers) as resp:
-                self._task_id = (await resp.json())['taskId']
+                self._task_id_data['taskId'] = (await resp.json())['taskId']
 
             status = ''
             response = None
@@ -49,9 +49,10 @@ class Solver(ICaptchaSolver):
                 async with session.post(self._get_result_url, json=self._task_id_data, headers=self._headers) as resp:
                     response = await resp.json()
                     status = response['status']
-                    self._solution = response['solution']['text']
 
-        self._stat.add_captcha(response['cost'], True)
+            self._solution = response['solution']['text']
+
+        self._stat.add_captcha(float(response['cost']), True)
         return self._solution
 
     async def report_incorrect(self):

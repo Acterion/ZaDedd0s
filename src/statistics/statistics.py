@@ -35,6 +35,7 @@ class StatisticsCollector(IReporter, IOperatorStatistics, ISolverStatistics, IDd
             self._stat.rejected += 1
         self._stat.uptime_spent += cost
         self._stat.spent += cost
+        self._stat.balance -= cost
 
     def add_page_update(self):
         self._stat.page_updates += 1

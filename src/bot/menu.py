@@ -1,9 +1,8 @@
-from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
-from telegram.ext import MessageHandler, Filters
+from aiogram import Bot, Dispatcher, types
 
 
 class Menu:
-    def __init__(self, bot, backend):
+    def __init__(self, bot: Bot, backend):
         self._subs = set()
         self._bot = bot
         self._backend = backend
@@ -11,66 +10,70 @@ class Menu:
     def get_subs(self):
         return self._subs
 
-    def add_handlers(self, disp):
-        disp.add_handler(MessageHandler(Filters.regex(r"[Hh]elp"), self.help))
-        disp.add_handler(MessageHandler(Filters.regex(r"Close"), self.close_keyboard))
-        disp.add_handler(MessageHandler(Filters.regex(r"Start"), self.start))
-        disp.add_handler(MessageHandler(Filters.regex(r"Stop"), self.stop))
-        disp.add_handler(MessageHandler(Filters.regex(r"report"), self.report))
-        disp.add_handler(MessageHandler(Filters.regex(r"Subscribe"), self.subscribe))
-        disp.add_handler(MessageHandler(Filters.regex(r"subs"), self.list_subs))
+    def add_handlers(self, disp: Dispatcher):
+        disp.register_message_handler(self.help, text='Help')
+        disp.register_message_handler(self.close_keyboard, text='Close')
+        disp.register_message_handler(self.start, text='Start')
+        disp.register_message_handler(self.stop, text='Stop')
+        disp.register_message_handler(self.report, text='Report')
+        disp.register_message_handler(self.subscribe, text='Subscribe')
+        disp.register_message_handler(self.list_subs, text='List subs')
 
-    def start(self, update, context):
+    async def start(self, message: types.Message):
         """Start ddos when the command Start is issued."""
-        update.message.reply_text('Starting ddos')
+        await message.answer('Starting ddos')
         self._backend.start_machine()
 
-    def stop(self, update, context):
+    async def stop(self, message: types.Message):
         """Stop ddos when the command Stop is issued."""
-        update.message.reply_text('Stopping ddos')
+        await message.answer('Stopping ddos')
         self._backend.stop_machine()
 
-    def help(self, update, context):
+    async def help(self, message: types.Message):
         """Send a message when the command /help or Help is issued."""
-        update.message.reply_text('Use /key to display control panel')
+        await message.answer('Use /start to display control panel')
 
-    async def report(self, update, context):
+    async def report(self, message: types.Message):
         """Send report message."""
-        update.message.reply_text(self._backend.get_report())
+        await message.answer('Please wait, while we prepare your report...')
+        await message.answer(await self._backend.get_report())
 
-    def subscribe(self, update, context):
+    async def subscribe(self, message: types.Message):
         """Add user to subs set"""
-        if update.message.chat_id not in self._subs:
-            self._subs.add(update.message.chat_id)
-            update.message.reply_text('You successfully subscribed to reports!')
+        if message.chat.id not in self._subs:
+            self._subs.add(message.chat.id)
+            await message.answer('You successfully subscribed to reports!')
         else:
-            update.message.reply_text('You have already subscribed to reports!')
+            await message.answer('You have already subscribed to reports!')
 
-    def list_subs(self, update, context):
+    async def list_subs(self, message: types.Message):
         """Send list of current subs."""
         all_subs = ", ".join(f"{n}" for n in self._subs)
         reply = "No subs" if not all_subs else all_subs
-        update.message.reply_text(reply)
+        await message.answer(reply)
 
-    def open_keyboard(self, update, context):
+    async def open_keyboard(self, message: types.Message):
         """Open reply keyboard."""
-        self._bot.send_message(
-            chat_id=update.message.chat_id,
+        await message.answer(
             text="Opening custom keyboard",
-            reply_markup=self.main_menu_keyboard_reply())
-
-    def close_keyboard(self, update, context):
-        """Close reply keyboard."""
-        self._bot.send_message(
-            chat_id=update.message.chat_id,
-            text="Closing keyboard",
-            reply_markup=ReplyKeyboardRemove()
+            reply_markup=self.main_menu_keyboard_reply()
         )
 
     @staticmethod
-    def main_menu_keyboard_reply(self):
-        keyboard = [[KeyboardButton('Help'), KeyboardButton('Close')],
-                    [KeyboardButton('Start'), KeyboardButton('Stop')],
-                    [KeyboardButton('Get report'), KeyboardButton('Subscribe')],
-                    [KeyboardButton('List subs')]]
-        return ReplyKeyboardMarkup(keyboard)
+    async def close_keyboard(message: types.Message):
+        """Close reply keyboard."""
+        await message.answer(
+            text="Closing keyboard",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
+    @staticmethod
+    def main_menu_keyboard_reply():
+        keyboard_markup = types.ReplyKeyboardMarkup(row_width=2)
+        buttons = ('Help', 'Close',
+                   'Start', 'Stop',
+                   'Report', 'Subscribe',
+                   'List subs')
+        keyboard_markup.add(*(types.KeyboardButton(text) for text in buttons))
+
+        return keyboard_markup

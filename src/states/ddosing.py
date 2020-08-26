@@ -3,7 +3,7 @@ from src.states.istate import AState
 
 
 class Ddosing(AState):
-    def __init__(self, state_actions, next_states, error_state, gap_between_requests=0.01):
+    def __init__(self, state_actions, next_states, error_state, gap_between_requests=10):
         super().__init__(state_actions, next_states, error_state)
         self._gap_between_requests = gap_between_requests
 

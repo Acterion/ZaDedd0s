@@ -1,6 +1,5 @@
 import abc
 
-from src.bot.bot import DDBot
 from src.actions_executors.ddoser import Ddoser
 from src.actions_executors.html_extractor import HtmlExtractor
 from src.actions_executors.solver import Solver
@@ -16,14 +15,15 @@ class IStateActionsFactory(abc.ABC):
 
 
 class StateActionsFactory(IStateActionsFactory):
-    def __init__(self, bot: DDBot, ddoser_stat: IDdoserStatistics, solver_stat: ISolverStatistics):
+    def __init__(self, bot, ddoser_stat: IDdoserStatistics, solver_stat: ISolverStatistics, captcha_client_key):
         self._bot = bot
         self._ddoser_stat = ddoser_stat
         self._solver_stat = solver_stat
+        self._captcha_client_key = captcha_client_key
 
     def make_sate_actions(self):
         return StateActions(Ddoser(stat=self._ddoser_stat),
                             HtmlExtractor(),
                             TelegramBot(self._bot),
-                            Solver(self._solver_stat),
+                            Solver(self._solver_stat, self._captcha_client_key),
                             PersonInfoGetter())
