@@ -1,3 +1,5 @@
+import asyncio
+
 import aiohttp
 
 from src.actions_executors.iexecutors import ICaptchaSolver
@@ -49,11 +51,12 @@ class Solver(ICaptchaSolver):
             status = ''
             error = 0
             response = None
-            while status != 'ready':
+            while status != 'ready' or error != 0:
                 async with session.post(self._get_result_url, json=self._task_id_data, headers=self._headers) as resp:
                     response = await resp.json()
                     status = response.get('status')
                     error = response.get('errorId')
+                    await asyncio.sleep(1)
 
             if not error:
                 self._solution = response['solution']['text']

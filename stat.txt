@@ -1,15 +1,15 @@
 {
     "avg_captcha_count": 0.0,
-    "avg_day_cost": 0.009350562500000003,
-    "balance": 9.747119999999997,
+    "avg_day_cost": 0.014688588134765614,
+    "balance": 9.5753,
     "current_state": false,
-    "page_updates": 4731,
+    "page_updates": 10418,
     "rejected": 0,
-    "spent": 0.11180900000000038,
-    "total_captcha_count": 159,
-    "uptime": 9,
+    "spent": 0.24863700000000158,
+    "total_captcha_count": 353,
+    "uptime": 12,
     "uptime_captcha_count": 0,
-    "uptime_end": 1598632569,
+    "uptime_end": 1598906030,
     "uptime_spent": 0,
-    "uptime_start": 1598632560
+    "uptime_start": 1598906018
 }

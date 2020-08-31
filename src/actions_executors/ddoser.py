@@ -48,10 +48,13 @@ class Ddoser(IDdoser):
         self._data['captchaText'] = solved_captcha
         self._data['date'] = date
         self._data['dateStr'] = date
-        async with self._session.post(self._month_url, data=self._data, headers=self._headers) as r:
-            self._data.pop('captchaText', None)
-            self._stat.add_page_update()
-            return await r.text()
+        try:
+            async with self._session.post(self._month_url, data=self._data, headers=self._headers) as r:
+                self._data.pop('captchaText', None)
+                self._stat.add_page_update()
+                return await r.text()
+        except aiohttp.ClientConnectionError as e:
+            print('Client connection error -> ', e)
 
     async def get_day(self, day_href: str) -> str:
         day_href = self._domain + day_href

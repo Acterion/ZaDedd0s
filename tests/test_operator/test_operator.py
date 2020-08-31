@@ -7,7 +7,7 @@ import pytest
 from src.operator.operator import Operator, default_machine_stop_and_start_time, OperatorClocks, IOperatorClocks
 from src.scheduler.scheduler import IScheduler
 from src.states.state_machine import IStateMachine
-from src.statistics.istatistics import IOperatorStatistics
+from src.statistics.istatistics import IMachineStatistics
 
 
 class MScheduler(IScheduler):
@@ -42,7 +42,7 @@ class MClocks(IOperatorClocks):
         pass
 
 
-class MOperatorStatistics(IOperatorStatistics):
+class MMachineStatistics(IMachineStatistics):
     def register_uptime(self):
         pass
 
@@ -57,7 +57,7 @@ def test_machine_start(mocker):
     stop, start = default_machine_stop_and_start_time()
     clocks.shutdown_and_next_start_times.return_value = (stop, start)
 
-    operator = Operator(scheduler, machine, clocks, MOperatorStatistics())
+    operator = Operator(scheduler, machine, clocks, MMachineStatistics())
     operator.start_machine()
 
     machine.start.assert_called_once()
@@ -66,7 +66,7 @@ def test_machine_start(mocker):
 
 def test_machine_stop(mocker):
     machine = MStateMachine(mocker)
-    operator = Operator(MScheduler(mocker), machine, MClocks(mocker), MOperatorStatistics())
+    operator = Operator(MScheduler(mocker), machine, MClocks(mocker), MMachineStatistics())
 
     operator.stop_machine()
 
@@ -75,7 +75,7 @@ def test_machine_stop(mocker):
 
 def test_operator_fail(mocker):
     machine = MStateMachine(mocker)
-    o = Operator(MScheduler(mocker), machine, OperatorClocks(), MOperatorStatistics())
+    o = Operator(MScheduler(mocker), machine, OperatorClocks(), MMachineStatistics())
     h = datetime.now().time().hour
     if h > 20 or h < 8:
         with pytest.raises(RuntimeError) as _:

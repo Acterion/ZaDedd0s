@@ -9,7 +9,7 @@ class IReporter(abc.ABC):
         pass
 
 
-class IOperatorStatistics(abc.ABC):
+class IMachineStatistics(abc.ABC):
     @abc.abstractmethod
     def register_uptime(self):
         pass

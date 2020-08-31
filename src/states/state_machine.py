@@ -1,6 +1,8 @@
 import abc
 import asyncio
+import atexit
 from asyncio import AbstractEventLoop
+from src.statistics.istatistics import IMachineStatistics
 
 
 class IStateMachine(abc.ABC):
@@ -18,20 +20,31 @@ class IStateMachine(abc.ABC):
 
 
 class StateMachine(IStateMachine):
-    def __init__(self, initial_state, loop: AbstractEventLoop):
+    def __init__(self, initial_state, loop: AbstractEventLoop, stat: IMachineStatistics):
         self._current_state = initial_state
         self._loop = loop
+        self._stat = stat
         self._is_running = False
+        self._exec_feature = None
+        atexit.register(self.cleanup)
+
+    def cleanup(self):
+        self._stat.register_downtime()
 
     def is_running(self):
         return self._is_running
 
     def stop(self):
+        print("Spooling down the machine...")
         self._is_running = False
+        self._exec_feature.cancel()
+        self._stat.register_downtime()
 
     def start(self):
+        print("Spooling up the machine!")
         self._is_running = True
-        asyncio.ensure_future(self._exec(), loop=self._loop)
+        self._exec_feature = asyncio.ensure_future(self._exec(), loop=self._loop)
+        self._stat.register_uptime()
 
     async def _exec(self):
         while self._current_state and self._is_running:
