@@ -10,6 +10,7 @@ RUN pip install -r /tmp/requirements.txt
 RUN pip uninstall --yes pipenv
 
 COPY src src
+COPY data.json .
 COPY main.py .
 
 CMD ["python", "main.py"]

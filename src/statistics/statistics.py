@@ -57,6 +57,7 @@ class StatisticsCollector(IReporter, IOperatorStatistics, ISolverStatistics, IDd
         self._stat.uptime = self._stat.uptime_end - self._stat.uptime_start
         self._stat.avg_captcha_count = self._stat.uptime_captcha_count / self._stat.uptime
         self._stat.avg_day_cost = (self._stat.avg_day_cost + self._stat.uptime_spent) / 2
+        self._stat.save_stat()
 
     async def get_report(self):
         self._stat.balance = await self.get_balance()

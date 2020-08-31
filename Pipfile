@@ -9,11 +9,12 @@ pytest = "*"
 pytest-asyncio = "*"
 
 [packages]
-python-telegram-bot = "*"
 beautifulsoup4 = "*"
 python-dateutil = "*"
 aiohttp = "*"
 aiogram = "*"
+aiosocksy = "*"
+aiohttp-socks = "*"
 
 [requires]
 python_version = "3.8"

@@ -25,7 +25,7 @@ class StatData:
         self.avg_captcha_count = j.get('avg_captcha_count', 0)
         self.avg_day_cost = j.get('avg_day_cost', 0)
 
-    def save_stat(self, path):
+    def save_stat(self, path='stat.txt'):
         write_file(path, json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4))
 
     def get_report(self) -> Report:

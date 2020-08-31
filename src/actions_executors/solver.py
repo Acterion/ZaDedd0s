@@ -1,7 +1,5 @@
 import aiohttp
-import os
 
-import src.utils.file_utils as file_uti
 from src.actions_executors.iexecutors import ICaptchaSolver
 from src.statistics.istatistics import ISolverStatistics
 
@@ -41,18 +39,26 @@ class Solver(ICaptchaSolver):
         async with aiohttp.ClientSession() as session:
             self._create_task_data['task']['body'] = captcha_string
             async with session.post(self._create_task_url, json=self._create_task_data, headers=self._headers) as resp:
-                self._task_id_data['taskId'] = (await resp.json())['taskId']
+                response = await resp.json()
+                self._task_id = response.get('taskId')
+                error = response.get('errorId')
+                if not self._task_id or error:
+                    return None
+                self._task_id_data['taskId'] = self._task_id
 
             status = ''
+            error = 0
             response = None
             while status != 'ready':
                 async with session.post(self._get_result_url, json=self._task_id_data, headers=self._headers) as resp:
                     response = await resp.json()
-                    status = response['status']
+                    status = response.get('status')
+                    error = response.get('errorId')
 
-            self._solution = response['solution']['text']
+            if not error:
+                self._solution = response['solution']['text']
+                self._stat.add_captcha(float(response['cost']), True)
 
-        self._stat.add_captcha(float(response['cost']), True)
         return self._solution
 
     async def report_incorrect(self):

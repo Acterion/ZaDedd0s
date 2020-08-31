@@ -93,5 +93,9 @@ class StateActions(IStateActions):
     async def _captcha_solved(self, response):
         captcha = self._extractor.extract_captcha(response)
         if captcha:
-            self._captcha_solution = await self._solver.solve(captcha)
+            solution = await self._solver.solve(captcha)
+            if solution:
+                self._captcha_solution = solution
+            else:
+                return False
         return bool(captcha)
