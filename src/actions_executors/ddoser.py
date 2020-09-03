@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 
 import aiohttp
 from aiohttp_socks import ProxyConnector
@@ -41,6 +42,7 @@ class Ddoser(IDdoser):
         self._session.close()
 
     def _refresh_cookies(self):
+        print(datetime.now(), ' Generating new session')
         self._session.cookie_jar.clear()
         asyncio.get_event_loop().call_later(3600, self._refresh_cookies)
 
@@ -54,7 +56,8 @@ class Ddoser(IDdoser):
                 self._stat.add_page_update()
                 return await r.text()
         except aiohttp.ClientConnectionError as e:
-            print('Client connection error -> ', e)
+            print(datetime.now(), ' Client connection error -> ', e)
+            return ''
 
     async def get_day(self, day_href: str) -> str:
         day_href = self._domain + day_href

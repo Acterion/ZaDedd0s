@@ -38,4 +38,4 @@ class HtmlExtractor(IHtmlExtractor):
 
     def check_success(self, html):
         soup = BeautifulSoup(html, 'html.parser', parse_only=only_p_tags)
-        return "ошибка" not in soup.p.text
+        return ("ошибка" not in soup.p.text) or ("неверно" not in soup.p.text)

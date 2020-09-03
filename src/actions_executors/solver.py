@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 
 import aiohttp
 
@@ -8,6 +9,7 @@ from src.statistics.istatistics import ISolverStatistics
 
 class Solver(ICaptchaSolver):
     def __init__(self, stat: ISolverStatistics, user_key):
+        self._last_timestamp = None
         self._stat = stat
         self._solution = ''
         self._task_id = 0
@@ -51,7 +53,7 @@ class Solver(ICaptchaSolver):
             status = ''
             error = 0
             response = None
-            while status != 'ready' or error != 0:
+            while status != 'ready' and error == 0:
                 async with session.post(self._get_result_url, json=self._task_id_data, headers=self._headers) as resp:
                     response = await resp.json()
                     status = response.get('status')
@@ -61,12 +63,16 @@ class Solver(ICaptchaSolver):
             if not error:
                 self._solution = response['solution']['text']
                 self._stat.add_captcha(float(response['cost']), True)
+                self._last_timestamp = datetime.now()
 
         return self._solution
 
     async def report_incorrect(self):
+        if (datetime.now() - self._last_timestamp).total_seconds() >= 60:
+            return False
         async with aiohttp.ClientSession() as session:
             async with session.post(self._report_url, json=self._task_id_data, headers=self._headers) as resp:
+                self._stat.add_captcha(0.0007, False)
                 return (await resp.json())['status'] == 'success'
 
     def get_last_solution(self) -> str:

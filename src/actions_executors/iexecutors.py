@@ -58,3 +58,7 @@ class ICaptchaSolver(abc.ABC):
     @abc.abstractmethod
     def get_last_solution(self) -> str:
         pass
+
+    @abc.abstractmethod
+    async def report_incorrect(self) -> bool:
+        pass

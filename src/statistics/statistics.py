@@ -48,14 +48,16 @@ class StatisticsCollector(IReporter, IMachineStatistics, ISolverStatistics, IDdo
     def register_uptime(self):
         self._stat.current_state = True
         self._stat.uptime_start = round(time.time())
+        self._stat.uptime = 0
         self._stat.uptime_captcha_count = 0
         self._stat.uptime_spent = 0
+        self._stat.page_updates = 0
 
     def register_downtime(self):
         self._stat.current_state = False
         self._stat.uptime_end = round(time.time())
         self._stat.uptime = self._stat.uptime_end - self._stat.uptime_start
-        self._stat.avg_captcha_count = self._stat.uptime_captcha_count / self._stat.uptime
+        self._stat.avg_captcha_count = self._stat.uptime_captcha_count / (self._stat.uptime / 3600)
         self._stat.avg_day_cost = (self._stat.avg_day_cost + self._stat.uptime_spent) / 2
         self._stat.save_stat()
 

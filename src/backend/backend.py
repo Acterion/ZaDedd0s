@@ -20,7 +20,7 @@ class Backend:
                                       self._captcha_client_key).make_sate_actions()
         initial_state = StatesFactory(actions).make_initial()
 
-        self._operator = Operator(self._scheduler, StateMachine(initial_state, loop,self._statistics_collector),
+        self._operator = Operator(self._scheduler, StateMachine(initial_state, loop, self._statistics_collector),
                                   OperatorClocks())
         # loop.run_forever()
 
