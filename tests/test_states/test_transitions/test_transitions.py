@@ -1,3 +1,7 @@
+import asyncio
+
+import pytest
+
 from tests.test_states.test_transitions.fixtures \
     import fsm_and_ddosing_boys, fsm_and_failing_boys, \
     fsm_and_penetrating_this_month_boys, fsm_and_penetrating_next_month_boys, \
@@ -17,8 +21,10 @@ def test_initial_to_error(fsm_and_failing_boys):
     assert fsm_and_failing_boys.actions.notify_subscribers_was_called_with == 'Error: 404'
 
 
-def test_ddosing_to_penetration_through_current_month(fsm_and_penetrating_this_month_boys):
+@pytest.mark.asyncio
+async def test_ddosing_to_penetration_through_current_month(fsm_and_penetrating_this_month_boys):
     fsm_and_penetrating_this_month_boys.fsm.start()
+    await asyncio.sleep(1)
 
     assert fsm_and_penetrating_this_month_boys.actions.check_free_places_in_current_month_was_called_once
     assert fsm_and_penetrating_this_month_boys.penetration.run_was_called

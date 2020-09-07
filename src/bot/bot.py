@@ -35,7 +35,7 @@ class DDBot:
         self.notify_subscribers(update.message.text)
         # update.message.reply_text(update.message.text)
 
-    def notify_subscribers(self, message):
+    async def notify_subscribers(self, message):
         """Broadcast message to all subs."""
         for sub in self._menu.get_subs():
-            self._bot.send_message(sub, message)
+            await self._bot.send_message(sub, message)

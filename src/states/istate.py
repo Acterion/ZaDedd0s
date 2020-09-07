@@ -22,7 +22,7 @@ class AState(IState, abc.ABC):
         try:
             await self.call_actions()
             self._next_state = self.select_next_state()
-        except RuntimeError as e:
+        except Exception as e:
             self._error_state.set_message(f'Error: {e}')
             self._next_state = self._error_state
 
@@ -43,4 +43,3 @@ class AState(IState, abc.ABC):
     @abc.abstractmethod
     async def call_actions(self):
         pass
-

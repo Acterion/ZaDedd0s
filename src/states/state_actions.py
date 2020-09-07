@@ -49,7 +49,7 @@ class StateActions(IStateActions):
         self._bot = bot
         self._solver = solver
         self._info_getter = info_getter
-        self._day_href = None
+        self._day_href = ''
 
     async def get_current_month_and_solve_captcha(self):
         await self._captcha_solved(await self._ddoser.get_month(format_today()))
@@ -62,7 +62,7 @@ class StateActions(IStateActions):
         self._day_href = await self._check_free_places(format_next_month())
         return self._day_href
 
-    async def try_to_reserve_place(self, detected_day_href: str) -> bool:
+    async def try_to_reserve_place(self, detected_day_href: str = '') -> bool:
         if not detected_day_href:
             detected_day_href = self._day_href
 
@@ -71,12 +71,14 @@ class StateActions(IStateActions):
 
         day_in_response = await self._ddoser.get_day(detected_day_href)
         time_href = self._extractor.extract_time_href(day_in_response)
+        print('Time ->', time_href)
 
         if not time_href:
             return False
 
         time_form_in_response = await self._ddoser.get_time_slot(time_href)
         hidden_fields = self._extractor.extract_hidden_fields(time_form_in_response)
+        print(hidden_fields)
 
         if not hidden_fields:
             return False
@@ -95,7 +97,7 @@ class StateActions(IStateActions):
     async def _check_free_places(self, formatted_date: str) -> str:
         response = await self._ddoser.get_month(formatted_date, self._solver.get_last_solution())
         if response:
-            if not self._extractor.check_success(response) and self._solver.get_last_solution():
+            if (not self._extractor.check_success(response)) and self._solver.get_last_solution():
                 await self._solver.report_incorrect()
             if await self._captcha_solved(response):
                 return ''

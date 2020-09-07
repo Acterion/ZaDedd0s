@@ -67,7 +67,8 @@ class Ddoser(IDdoser):
     async def get_time_slot(self, time_href: str) -> str:
         time_href = self._domain + time_href
         async with self._session.get(time_href, headers=self._headers) as r:
-            return await r.text()
+            resp = await r.text()
+            return resp
 
     async def send_final_form(self, solved_captcha: str, hidden_fields: dict, person_info: PersonInfo) -> str:
         self._data['captchaText'] = solved_captcha
@@ -76,6 +77,11 @@ class Ddoser(IDdoser):
         self._data['fields[0].content'] = person_info.residence
         self._data['fields[1].content'] = person_info.passport
         self._data['fields[2].content'] = 'Studium'
+        self._data.pop('residence')
+        self._data.pop('passport')
         self._data = {**self._data, **hidden_fields}
+        print('Sending data -> ', self._data)
         async with self._session.post(self._final_url, data=self._data, headers=self._headers) as r:
-            return await r.text()
+            resp = await r.text()
+            print(resp)
+            return resp

@@ -6,4 +6,4 @@ class TelegramBot(ITelegramBot):
         self._bot = bot
 
     async def notify_subscribers(self, message: str):
-        self._bot.notify_subscribers(message)
+        await self._bot.notify_subscribers(message)

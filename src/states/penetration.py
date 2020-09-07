@@ -7,7 +7,8 @@ class Penetration(AState):
         self._reservation_succeeded = False
 
     async def call_actions(self):
-        self._reservation_succeeded = await self._state_actions.try_to_reserve_place()
+        result = await self._state_actions.try_to_reserve_place()
+        self._reservation_succeeded = result
 
     def select_next_state(self, name=None):
         if self._reservation_succeeded:
